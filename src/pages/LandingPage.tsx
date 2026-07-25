@@ -81,9 +81,8 @@ export function LandingPage() {
         </div>
         <Link
           className="hero-report"
-          to="/reports/$id"
-          params={{ id: "demo-report" }}
-          aria-label="Preview an example RoleProof report"
+          to="/lab"
+          aria-label="Generate a RoleProof like this example"
         >
           <div className="paper-top">
             <span className="mini-brand">RP / 001</span>
