@@ -2,6 +2,9 @@ import { Menu, X } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { cn } from "../../lib/utils";
+import { useAuth } from "../../lib/auth";
+import { useHydrated } from "../../lib/use-hydrated";
+import { getInitials } from "../../lib/utils";
 
 const navItems = [
   { label: "Profile", to: "/leonardo-sanchez" as const },
@@ -11,6 +14,8 @@ const navItems = [
 export function AppShell({ children }: { children: ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { account } = useAuth();
+  const hydrated = useHydrated();
 
   // Route change should never leave the mobile sheet stuck open.
   useEffect(() => {
@@ -50,9 +55,36 @@ export function AppShell({ children }: { children: ReactNode }) {
                 {item.label}
               </Link>
             ))}
-            <Link className="button button-small" to="/lab" onClick={() => setMenuOpen(false)}>
-              Generate a RoleProof
-            </Link>
+            {hydrated && account ? (
+              <>
+                <Link to="/app/dashboard" onClick={() => setMenuOpen(false)} activeProps={{ className: "active" }}>
+                  Workspace
+                </Link>
+                <Link
+                  className="button button-small"
+                  to="/app/dashboard"
+                  onClick={() => setMenuOpen(false)}
+                  aria-label={`Open workspace as ${account.name}`}
+                >
+                  <span className="avatar avatar-small">{getInitials(account.name || account.email)}</span>
+                  Workspace
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link to="/login" onClick={() => setMenuOpen(false)} search={{ mode: "signin" }}>
+                  Sign in
+                </Link>
+                <Link
+                  className="button button-small"
+                  to="/login"
+                  search={{ mode: "signup" }}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Get started
+                </Link>
+              </>
+            )}
           </nav>
           <button
             type="button"
