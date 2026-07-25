@@ -1,4 +1,4 @@
-import { ArrowRight, ExternalLink, MapPin } from "lucide-react";
+import { ArrowRight, Briefcase, ExternalLink, MapPin } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { candidateProfile } from "../data/candidate-profile";
 import { Badge, Eyebrow, SectionHeading } from "../components/ui/Primitives";
@@ -54,9 +54,15 @@ export function CandidateProfilePage() {
                 <div>
                   <h3>{project.name}</h3>
                   <p>{project.summary}</p>
-                  <ul>
-                    {project.contribution.slice(0, 2).map((item) => <li key={item}>{item}</li>)}
+                  <ul className="project-bullets">
+                    {project.contribution.map((item) => <li key={item}>{item}</li>)}
                   </ul>
+                  {project.outcomes?.length ? (
+                    <p className="project-outcome">
+                      <span className="eyebrow project-outcome-label">Outcome</span>
+                      {project.outcomes.join(" · ")}
+                    </p>
+                  ) : null}
                   <div className="tag-row">
                     {project.technologies.map((technology) => (
                       <span className="tag" key={technology}>{technology}</span>
@@ -64,6 +70,33 @@ export function CandidateProfilePage() {
                   </div>
                 </div>
                 <span className="evidence-ref">[{project.id.replace("project-", "").slice(0, 3).toUpperCase()}]</span>
+              </article>
+            ))}
+          </div>
+
+          <div className="experience-block">
+            <SectionHeading eyebrow="Experience" title="What the work has actually looked like." />
+            {candidateProfile.experiences.map((experience) => (
+              <article className="experience-row" key={experience.id}>
+                <div className="experience-meta">
+                  <Briefcase aria-hidden size={18} />
+                  <div>
+                    <p className="eyebrow experience-period">{experience.period}</p>
+                    <h3>{experience.role}</h3>
+                    <p className="muted">{experience.company}</p>
+                  </div>
+                </div>
+                <div>
+                  <p>{experience.summary}</p>
+                  <ul className="project-bullets">
+                    {experience.highlights.map((item) => <li key={item}>{item}</li>)}
+                  </ul>
+                  <div className="tag-row">
+                    {experience.technologies.map((technology) => (
+                      <span className="tag" key={technology}>{technology}</span>
+                    ))}
+                  </div>
+                </div>
               </article>
             ))}
           </div>

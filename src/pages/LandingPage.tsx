@@ -2,10 +2,13 @@ import {
   ArrowRight,
   Check,
   FileCheck2,
+  Layers,
   Link2,
+  Rocket,
   SearchCheck,
   ShieldCheck,
   Sparkles,
+  Users,
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Badge, Eyebrow, SectionHeading } from "../components/ui/Primitives";
@@ -22,6 +25,30 @@ const plans = [
   { name: "Free", price: "$0", items: ["1 public profile", "3 analyses / month", "Shareable reports"] },
   { name: "Pro", price: "$15", featured: true, items: ["Unlimited analyses", "Cover Letter Studio", "Report variants"] },
   { name: "Career Coach", price: "$99", items: ["Up to 20 candidates", "Shared workspace", "Reusable templates"] },
+];
+
+const audiences = [
+  {
+    icon: Rocket,
+    label: "Job seekers",
+    text: "Apply with proof, not adjectives. Every claim is linked back to work you actually did.",
+  },
+  {
+    icon: Users,
+    label: "Career coaches",
+    text: "Show clients where the evidence is thin and where a concrete story already exists.",
+  },
+  {
+    icon: Layers,
+    label: "Small hiring teams",
+    text: "Read a report that separates verified work from generic application text.",
+  },
+];
+
+const proofStrip = [
+  { value: "8 sources", label: "Verified evidence graph" },
+  { value: "6 stages", label: "Requirements → 30-day plan" },
+  { value: "0", label: "Invented achievements" },
 ];
 
 export function LandingPage() {
@@ -52,7 +79,11 @@ export function LandingPage() {
             <span><Link2 size={16} /> Traceable evidence</span>
           </div>
         </div>
-        <div className="hero-report" aria-label="Example RoleProof report preview">
+        <Link
+          className="hero-report"
+          to="/lab"
+          aria-label="Generate a RoleProof like this example"
+        >
           <div className="paper-top">
             <span className="mini-brand">RP / 001</span>
             <Badge tone="good">Promising fit</Badge>
@@ -77,12 +108,21 @@ export function LandingPage() {
             <SearchCheck size={18} />
             <p><strong>Honest gap:</strong> exact company-domain depth is unverified.</p>
           </div>
-        </div>
+        </Link>
       </section>
 
       <section className="ticker" aria-label="Product principles">
         <span>Verified evidence</span><span>•</span><span>Honest gaps</span><span>•</span>
         <span>Role-specific plans</span><span>•</span><span>Shareable proof</span>
+      </section>
+
+      <section className="proof-strip" aria-label="What sits behind every RoleProof">
+        {proofStrip.map((item) => (
+          <div key={item.label}>
+            <strong>{item.value}</strong>
+            <span>{item.label}</span>
+          </div>
+        ))}
       </section>
 
       <section className="section-pad">
@@ -100,6 +140,12 @@ export function LandingPage() {
             </article>
           ))}
         </div>
+        <div className="workflow-cta">
+          <Link className="button" to="/lab">
+            Start with a real role <ArrowRight size={18} />
+          </Link>
+          <Link className="text-link" to="/leonardo-sanchez">See the source profile</Link>
+        </div>
       </section>
 
       <section className="contrast-section">
@@ -113,6 +159,22 @@ export function LandingPage() {
             <div><FileCheck2 /><p><strong>RoleProof:</strong> claims linked to a project, experience or education record.</p></div>
             <div><ShieldCheck /><p><strong>RoleProof:</strong> gaps remain gaps, with a practical interview plan.</p></div>
           </div>
+        </div>
+      </section>
+
+      <section className="section-pad">
+        <SectionHeading
+          eyebrow="Who it’s for"
+          title="Written for people who actually want the role."
+        />
+        <div className="audience-grid">
+          {audiences.map(({ icon: Icon, label, text }) => (
+            <article className="audience-card" key={label}>
+              <Icon aria-hidden />
+              <h3>{label}</h3>
+              <p>{text}</p>
+            </article>
+          ))}
         </div>
       </section>
 

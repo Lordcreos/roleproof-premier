@@ -1,11 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight, Check, LoaderCircle, LockKeyhole } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ArrowRight, Check, LoaderCircle, LockKeyhole, RotateCcw, Save } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
 import { Eyebrow, ErrorPanel } from "../components/ui/Primitives";
-import { readJobDraft, saveJobDraft } from "../lib/storage";
+import { clearJobDraft, readJobDraft, saveJobDraft } from "../lib/storage";
 import { isDemoMode } from "../lib/supabase";
 import { jobAnalysisInputSchema } from "../schemas/domain";
 import { analyzeRole } from "../services/roleproof-service";
@@ -27,6 +27,8 @@ export function JobMatchLabPage() {
   const hydrated = useHydrated();
   const [stage, setStage] = useState(-1);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [draftSaved, setDraftSaved] = useState(false);
+  const draftTimer = useRef<number | null>(null);
   const {
     register,
     handleSubmit,
@@ -59,6 +61,38 @@ export function JobMatchLabPage() {
   }, [hydrated, reset]);
 
   const description = watch("jobDescription") ?? "";
+  const descriptionLength = description.length;
+  const descriptionMax = 30000;
+  const descriptionPct = Math.min(100, Math.round((descriptionLength / descriptionMax) * 100));
+
+  // Auto-save the draft as the user types so a reload doesn't lose input.
+  useEffect(() => {
+    if (!hydrated) return;
+    const subscription = watch((values) => {
+      if (draftTimer.current) window.clearTimeout(draftTimer.current);
+      draftTimer.current = window.setTimeout(() => {
+        saveJobDraft(values as JobFormValues);
+        setDraftSaved(true);
+        window.setTimeout(() => setDraftSaved(false), 1400);
+      }, 400);
+    });
+    return () => {
+      subscription.unsubscribe();
+      if (draftTimer.current) window.clearTimeout(draftTimer.current);
+    };
+  }, [hydrated, watch]);
+
+  const handleClearDraft = () => {
+    clearJobDraft();
+    reset({
+      companyName: "",
+      roleTitle: "",
+      companyUrl: "",
+      jobDescription: "",
+      language: "en",
+      focusArea: "technical-fit",
+    });
+  };
 
   useEffect(() => {
     if (!isSubmitting) return;
@@ -100,6 +134,19 @@ export function JobMatchLabPage() {
       </div>
 
       <form className="job-form" onSubmit={handleSubmit(onSubmit)} noValidate>
+        <div className="form-topline">
+          <span className="draft-chip" aria-live="polite">
+            {draftSaved ? (<><Check size={13} /> Draft saved</>) : (<><Save size={13} /> Auto-saves as you type</>)}
+          </span>
+          <button
+            type="button"
+            className="text-button"
+            onClick={handleClearDraft}
+            disabled={isSubmitting}
+          >
+            <RotateCcw size={14} /> Clear draft
+          </button>
+        </div>
         {isDemoMode ? (
           <div className="demo-notice">
             <span>Demo mode</span>
@@ -119,7 +166,7 @@ export function JobMatchLabPage() {
         </Field>
         <Field
           label="Job description"
-          hint={`${description.length.toLocaleString()} / 30,000 characters`}
+          hint={`${descriptionLength.toLocaleString()} / ${descriptionMax.toLocaleString()} characters`}
           error={errors.jobDescription?.message}
         >
           <textarea
@@ -127,6 +174,9 @@ export function JobMatchLabPage() {
             rows={13}
             placeholder="Paste the complete job description here…"
           />
+          <div className="char-meter" aria-hidden>
+            <span style={{ width: `${descriptionPct}%` }} />
+          </div>
         </Field>
         <div className="form-grid">
           <Field label="Analysis language" error={errors.language?.message}>
@@ -155,13 +205,20 @@ export function JobMatchLabPage() {
         ) : null}
 
         {isSubmitting ? (
-          <div className="analysis-progress" role="status" aria-live="polite">
+          <div className="analysis-progress" role="status" aria-live="polite" aria-busy="true">
             <div className="progress-head">
-              <LoaderCircle className="spin" />
+              <LoaderCircle className="spin" aria-hidden />
               <div>
                 <strong>Building your RoleProof</strong>
                 <span>{progressStages[stage] ?? progressStages[0]}</span>
               </div>
+            </div>
+            <div className="progress-bar" aria-hidden>
+              <span
+                style={{
+                  width: `${Math.round(((Math.max(stage, 0) + 1) / progressStages.length) * 100)}%`,
+                }}
+              />
             </div>
             <ol>
               {progressStages.map((item, index) => (
@@ -172,7 +229,7 @@ export function JobMatchLabPage() {
             </ol>
           </div>
         ) : (
-          <button className="button button-wide" type="submit">
+          <button className="button button-wide" type="submit" aria-busy={isSubmitting}>
             Generate my RoleProof <ArrowRight size={18} />
           </button>
         )}

@@ -75,3 +75,8 @@ export function readJobDraft(): Partial<JobAnalysisInput> {
     return {};
   }
 }
+
+export function clearJobDraft() {
+  if (!hasWindow()) return;
+  localStorage.removeItem(DRAFT_KEY);
+}

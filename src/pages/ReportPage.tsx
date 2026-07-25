@@ -1,11 +1,20 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Check, Copy, ExternalLink, FileText, Share2 } from "lucide-react";
+import {
+  Check,
+  Copy,
+  ExternalLink,
+  FileText,
+  Lock,
+  Printer,
+  Share2,
+} from "lucide-react";
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ReportView } from "../components/report/ReportView";
 import { ErrorPanel, LoadingPanel } from "../components/ui/Primitives";
 import { getReport, setReportSharing } from "../services/roleproof-service";
 import { useHydrated } from "../lib/use-hydrated";
+import { formatDate } from "../lib/utils";
 
 export function ReportPage({ id }: { id: string }) {
   const hydrated = useHydrated();
@@ -35,6 +44,7 @@ export function ReportPage({ id }: { id: string }) {
 
   const report = reportQuery.data;
   const shareUrl = `${window.location.origin}/r/${report.publicSlug}`;
+  const generated = formatDate(report.generatedAt);
 
   const toggleSharing = async () => {
     setShareError(null);
@@ -53,16 +63,28 @@ export function ReportPage({ id }: { id: string }) {
     window.setTimeout(() => setCopied(false), 1800);
   };
 
+  const handlePrint = () => {
+    if (typeof window !== "undefined") window.print();
+  };
+
   return (
     <div className="report-page">
-      <div className="report-toolbar">
-        <div>
-          <span className={report.isPublic ? "status-dot live" : "status-dot"} />
-          {report.isPublic ? "Public link active" : "Private draft"}
+      <div className="report-toolbar no-print" role="region" aria-label="Report controls">
+        <div className="toolbar-status">
+          <span className={report.isPublic ? "status-dot live" : "status-dot"} aria-hidden />
+          <div>
+            <strong>{report.isPublic ? "Public link active" : "Private draft"}</strong>
+            <small>Generated {generated}</small>
+          </div>
         </div>
-        <div>
-          <button className="toolbar-button" type="button" onClick={toggleSharing}>
-            <Share2 size={16} />
+        <div className="toolbar-actions">
+          <button
+            className="toolbar-button toolbar-primary"
+            type="button"
+            onClick={toggleSharing}
+            aria-pressed={report.isPublic}
+          >
+            {report.isPublic ? <Lock size={16} /> : <Share2 size={16} />}
             {report.isPublic ? "Make private" : "Enable public link"}
           </button>
           <button
@@ -70,6 +92,7 @@ export function ReportPage({ id }: { id: string }) {
             type="button"
             onClick={copyShareLink}
             disabled={!report.isPublic}
+            aria-live="polite"
           >
             {copied ? <Check size={16} /> : <Copy size={16} />}
             {copied ? "Copied" : "Copy link"}
@@ -79,9 +102,12 @@ export function ReportPage({ id }: { id: string }) {
               <ExternalLink size={16} /> Preview
             </a>
           ) : null}
+          <button className="toolbar-button" type="button" onClick={handlePrint}>
+            <Printer size={16} /> Print
+          </button>
         </div>
       </div>
-      {shareError ? <p className="toolbar-error" role="alert">{shareError}</p> : null}
+      {shareError ? <p className="toolbar-error no-print" role="alert">{shareError}</p> : null}
       <ReportView report={report} />
       <section className="report-cta">
         <div>
