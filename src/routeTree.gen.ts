@@ -9,38 +9,121 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as LeonardoSanchezRouteImport } from './routes/leonardo-sanchez'
+import { Route as LabRouteImport } from './routes/lab'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as RSlugRouteImport } from './routes/r.$slug'
+import { Route as ReportsIdIndexRouteImport } from './routes/reports.$id.index'
+import { Route as ReportsIdCoverLetterRouteImport } from './routes/reports.$id.cover-letter'
 
+const LeonardoSanchezRoute = LeonardoSanchezRouteImport.update({
+  id: '/leonardo-sanchez',
+  path: '/leonardo-sanchez',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LabRoute = LabRouteImport.update({
+  id: '/lab',
+  path: '/lab',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RSlugRoute = RSlugRouteImport.update({
+  id: '/r/$slug',
+  path: '/r/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportsIdIndexRoute = ReportsIdIndexRouteImport.update({
+  id: '/reports/$id/',
+  path: '/reports/$id/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportsIdCoverLetterRoute = ReportsIdCoverLetterRouteImport.update({
+  id: '/reports/$id/cover-letter',
+  path: '/reports/$id/cover-letter',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/lab': typeof LabRoute
+  '/leonardo-sanchez': typeof LeonardoSanchezRoute
+  '/r/$slug': typeof RSlugRoute
+  '/reports/$id/cover-letter': typeof ReportsIdCoverLetterRoute
+  '/reports/$id/': typeof ReportsIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/lab': typeof LabRoute
+  '/leonardo-sanchez': typeof LeonardoSanchezRoute
+  '/r/$slug': typeof RSlugRoute
+  '/reports/$id/cover-letter': typeof ReportsIdCoverLetterRoute
+  '/reports/$id': typeof ReportsIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/lab': typeof LabRoute
+  '/leonardo-sanchez': typeof LeonardoSanchezRoute
+  '/r/$slug': typeof RSlugRoute
+  '/reports/$id/cover-letter': typeof ReportsIdCoverLetterRoute
+  '/reports/$id/': typeof ReportsIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/lab'
+    | '/leonardo-sanchez'
+    | '/r/$slug'
+    | '/reports/$id/cover-letter'
+    | '/reports/$id/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/lab'
+    | '/leonardo-sanchez'
+    | '/r/$slug'
+    | '/reports/$id/cover-letter'
+    | '/reports/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/lab'
+    | '/leonardo-sanchez'
+    | '/r/$slug'
+    | '/reports/$id/cover-letter'
+    | '/reports/$id/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LabRoute: typeof LabRoute
+  LeonardoSanchezRoute: typeof LeonardoSanchezRoute
+  RSlugRoute: typeof RSlugRoute
+  ReportsIdCoverLetterRoute: typeof ReportsIdCoverLetterRoute
+  ReportsIdIndexRoute: typeof ReportsIdIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/leonardo-sanchez': {
+      id: '/leonardo-sanchez'
+      path: '/leonardo-sanchez'
+      fullPath: '/leonardo-sanchez'
+      preLoaderRoute: typeof LeonardoSanchezRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lab': {
+      id: '/lab'
+      path: '/lab'
+      fullPath: '/lab'
+      preLoaderRoute: typeof LabRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +131,38 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/r/$slug': {
+      id: '/r/$slug'
+      path: '/r/$slug'
+      fullPath: '/r/$slug'
+      preLoaderRoute: typeof RSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reports/$id/': {
+      id: '/reports/$id/'
+      path: '/reports/$id'
+      fullPath: '/reports/$id/'
+      preLoaderRoute: typeof ReportsIdIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reports/$id/cover-letter': {
+      id: '/reports/$id/cover-letter'
+      path: '/reports/$id/cover-letter'
+      fullPath: '/reports/$id/cover-letter'
+      preLoaderRoute: typeof ReportsIdCoverLetterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LabRoute: LabRoute,
+  LeonardoSanchezRoute: LeonardoSanchezRoute,
+  RSlugRoute: RSlugRoute,
+  ReportsIdCoverLetterRoute: ReportsIdCoverLetterRoute,
+  ReportsIdIndexRoute: ReportsIdIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
