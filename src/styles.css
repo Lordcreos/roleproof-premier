@@ -94,6 +94,34 @@ h3 {
   outline-offset: 3px;
 }
 
+/* Match input focus with a slightly softer offset. */
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible,
+.control-group select:focus-visible,
+.control-group textarea:focus-visible {
+  outline: 0;
+}
+
+.skip-link {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 10px 14px;
+  border-radius: 4px;
+  color: var(--paper);
+  background: var(--ink);
+  font-size: 0.82rem;
+  font-weight: 750;
+  transform: translateY(-140%);
+  transition: transform 160ms ease;
+  z-index: 60;
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
 ::selection {
   background: #e6bdae;
 }
@@ -121,6 +149,10 @@ h3 {
   border-bottom: 1px solid rgb(216 208 195 / 72%);
   background: rgb(244 239 230 / 91%);
   backdrop-filter: blur(18px);
+}
+
+main:focus {
+  outline: 0;
 }
 
 .nav-wrap,
@@ -1147,6 +1179,424 @@ h3 {
   margin: 8px auto 0;
   color: var(--risk);
   font-size: 0.75rem;
+}
+
+/* ------- Polish additions (second pass) ------- */
+
+.hero-report {
+  display: block;
+  color: inherit;
+  cursor: pointer;
+  transition: transform 220ms ease, box-shadow 220ms ease;
+}
+
+.hero-report:hover {
+  transform: rotate(0deg) translateY(-2px);
+  box-shadow: 22px 22px 0 rgb(169 71 47 / 15%);
+}
+
+.proof-strip {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 40px 0;
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.proof-strip > div {
+  padding-left: 22px;
+  border-left: 2px solid var(--accent);
+  display: grid;
+  gap: 4px;
+}
+
+.proof-strip strong {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.6rem, 2.4vw, 2.2rem);
+  letter-spacing: -0.02em;
+}
+
+.proof-strip span {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.workflow-cta {
+  margin-top: 55px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.audience-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+
+.audience-card {
+  padding: 34px 30px;
+  background: var(--paper);
+  display: grid;
+  gap: 14px;
+}
+
+.audience-card svg {
+  color: var(--accent);
+}
+
+.audience-card h3 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.audience-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+/* Candidate profile — richer storytelling. */
+.project-bullets {
+  padding-left: 17px;
+  margin: 6px 0 10px;
+}
+
+.project-outcome {
+  margin: 6px 0 12px;
+  font-size: 0.78rem;
+  color: #4d4a44;
+}
+
+.project-outcome-label {
+  display: inline-block;
+  margin: 0 8px 0 0;
+  color: var(--sage);
+  font-size: 0.6rem;
+}
+
+.experience-block {
+  padding-top: 90px;
+}
+
+.experience-row {
+  padding: 30px 0;
+  border-top: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 40px;
+}
+
+.experience-row:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.experience-meta {
+  display: flex;
+  gap: 12px;
+  color: var(--muted);
+}
+
+.experience-meta svg {
+  color: var(--accent);
+  flex: 0 0 auto;
+  margin-top: 4px;
+}
+
+.experience-meta h3 {
+  margin: 4px 0 4px;
+  font-size: 1.15rem;
+}
+
+.experience-meta p {
+  margin: 0;
+  font-size: 0.82rem;
+}
+
+.experience-period {
+  margin-bottom: 4px;
+}
+
+/* Lab form controls */
+.form-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed var(--line);
+}
+
+.draft-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  color: var(--sage);
+  background: #e5f0e9;
+  font-size: 0.7rem;
+  font-weight: 750;
+}
+
+.draft-chip.subtle {
+  color: var(--muted);
+  background: transparent;
+  padding-left: 0;
+}
+
+.text-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border: 0;
+  border-radius: 3px;
+  color: var(--muted);
+  background: transparent;
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.text-button:hover:not(:disabled) {
+  color: var(--ink);
+  background: #ece6dc;
+}
+
+.text-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.char-meter {
+  margin-top: 8px;
+  height: 3px;
+  background: #e6e0d3;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.char-meter span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transition: width 160ms ease;
+}
+
+.progress-bar {
+  margin: 4px 0 18px;
+  height: 4px;
+  background: #e6dfd2;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-bar span {
+  display: block;
+  height: 100%;
+  background: var(--sage);
+  transition: width 300ms ease;
+}
+
+/* Report toolbar — clearer sharing controls. */
+.toolbar-status {
+  align-items: center;
+}
+
+.toolbar-status > div {
+  display: grid;
+  gap: 2px;
+  color: var(--ink);
+  font-size: 0.78rem;
+}
+
+.toolbar-status small {
+  color: var(--muted);
+  font-size: 0.68rem;
+}
+
+.toolbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+}
+
+.toolbar-button {
+  min-height: 40px;
+  border-radius: 3px;
+}
+
+.toolbar-primary {
+  color: var(--paper) !important;
+  background: var(--ink) !important;
+}
+
+.toolbar-primary:hover {
+  background: var(--accent-dark) !important;
+}
+
+/* Empty state variant */
+.state-empty {
+  border-style: dashed;
+  background: rgb(251 248 241 / 55%);
+}
+
+.state-empty svg {
+  color: var(--muted);
+}
+
+/* Cover Letter Studio */
+.studio-hint {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.studio-hint kbd {
+  padding: 1px 6px;
+  border: 1px solid var(--line);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  background: var(--paper);
+  font-family: ui-monospace, monospace;
+  font-size: 0.72rem;
+}
+
+/* Footer meta alignment on wider screens */
+.footer-meta {
+  text-align: right;
+}
+
+@media (max-width: 680px) {
+  .proof-strip {
+    grid-template-columns: 1fr;
+    padding: 30px 0;
+  }
+
+  .audience-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .experience-row {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .footer-meta {
+    text-align: left;
+  }
+
+  .toolbar-actions {
+    width: 100%;
+  }
+
+  .toolbar-primary {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+}
+
+/* ------- Print styles ------- */
+@media print {
+  :root { color: #111; background: #fff; }
+  body { background: #fff; }
+
+  .site-header,
+  .site-footer,
+  .skip-link,
+  .no-print,
+  .report-cta,
+  .public-contact,
+  .waitlist-section,
+  .ticker,
+  .proof-strip,
+  .workflow-cta,
+  .studio-controls,
+  .studio-hint,
+  .hero-actions,
+  .trust-row {
+    display: none !important;
+  }
+
+  main,
+  .report-view,
+  .letter-paper,
+  .letter-workspace {
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    background: #fff !important;
+  }
+
+  .studio-page,
+  .studio-layout {
+    display: block !important;
+    padding: 0 !important;
+  }
+
+  .report-view {
+    padding-block: 0 !important;
+  }
+
+  .report-section,
+  .report-summary,
+  .report-header {
+    padding-block: 24px !important;
+    break-inside: avoid;
+  }
+
+  .evidence-section {
+    color: #111 !important;
+    background: #fff !important;
+    margin-inline: 0 !important;
+    padding-inline: 0 !important;
+  }
+
+  .evidence-card,
+  .evidence-card > p,
+  .evidence-source strong,
+  .evidence-source small {
+    color: #111 !important;
+  }
+
+  .fit-seal {
+    transform: none !important;
+  }
+
+  .idea-hero {
+    color: #111 !important;
+    background: #fff !important;
+    border: 1px solid #bbb;
+  }
+
+  .letter-paper input,
+  .letter-paper textarea {
+    border: 0 !important;
+    background: transparent !important;
+  }
+
+  a { color: #111; text-decoration: none; }
+}
+
+/* Extra reduced-motion covers: no rotate transforms in hero/report seal. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-report,
+  .fit-seal {
+    transform: none !important;
+  }
+
+  .button:hover,
+  .hero-report:hover {
+    transform: none !important;
+  }
 }
 
 .report-view {
