@@ -75,11 +75,3 @@ export function readJobDraft(): Partial<JobAnalysisInput> {
     return {};
   }
 }
-
-export function useHydrated() {
-  // Deliberately minimal; used to gate localStorage reads that would
-  // otherwise cause hydration mismatches under SSR.
-  const [hydrated, setHydrated] = require("react").useState(false);
-  require("react").useEffect(() => setHydrated(true), []);
-  return hydrated as boolean;
-}
