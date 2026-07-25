@@ -3,6 +3,7 @@ import {
   ArrowLeft,
   Check,
   Clipboard,
+  Printer,
   RefreshCw,
   Save,
   Sparkles,
@@ -47,10 +48,24 @@ export function CoverLetterPage({ id }: { id: string }) {
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [lastSavedAt, setLastSavedAt] = useState<string | null>(null);
 
   useEffect(() => {
     if (hydrated) setLetter(getLocalCoverLetter(id));
   }, [hydrated, id]);
+
+  // Cmd/Ctrl+S saves the current letter.
+  useEffect(() => {
+    const listener = (event: KeyboardEvent) => {
+      const isSave = (event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "s";
+      if (!isSave || !letter) return;
+      event.preventDefault();
+      void handleSave();
+    };
+    window.addEventListener("keydown", listener);
+    return () => window.removeEventListener("keydown", listener);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [letter]);
 
   const evidenceOptions = useMemo(() => {
     if (!reportQuery.data) return [];
@@ -121,6 +136,7 @@ export function CoverLetterPage({ id }: { id: string }) {
     try {
       await saveCoverLetter(letter);
       setSaved(true);
+      setLastSavedAt(new Date().toISOString());
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : "Save failed.");
     } finally {
@@ -135,6 +151,10 @@ export function CoverLetterPage({ id }: { id: string }) {
     window.setTimeout(() => setCopied(false), 1800);
   };
 
+  const handlePrint = () => {
+    if (typeof window !== "undefined") window.print();
+  };
+
   return (
     <div className="studio-page">
       <header className="studio-header">
@@ -144,6 +164,9 @@ export function CoverLetterPage({ id }: { id: string }) {
         <div>
           <p className="eyebrow">Cover Letter Studio</p>
           <h1>{report.roleTitle} <span>at {report.companyName}</span></h1>
+          <p className="studio-hint">
+            Edits are yours. Save with <kbd>⌘</kbd> <kbd>S</kbd> or the button below.
+          </p>
         </div>
       </header>
 
@@ -237,15 +260,23 @@ export function CoverLetterPage({ id }: { id: string }) {
             </div>
           ) : (
             <>
-              <div className="letter-actions">
+              <div className="letter-actions no-print">
                 <div>
                   <Badge tone="good">No unsupported claims found</Badge>
                   <span>{countWords(letterAsText(letter))} words</span>
+                  {lastSavedAt ? (
+                    <span className="draft-chip subtle">
+                      <Check size={13} /> Saved at {new Date(lastSavedAt).toLocaleTimeString()}
+                    </span>
+                  ) : null}
                 </div>
                 <div>
                   <button type="button" onClick={copyLetter}>
                     {copied ? <Check size={16} /> : <Clipboard size={16} />}
                     {copied ? "Copied" : "Copy"}
+                  </button>
+                  <button type="button" onClick={handlePrint}>
+                    <Printer size={16} /> Print
                   </button>
                   <button type="button" onClick={handleSave} disabled={busy}>
                     {saved ? <Check size={16} /> : <Save size={16} />}
