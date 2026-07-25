@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight, Check, LoaderCircle } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -20,8 +20,12 @@ export function WaitlistForm() {
 
   const onSubmit = async ({ email }: WaitlistValues) => {
     setResult(null);
-    const response = await submitWaitlist(email);
-    setResult(response.duplicate ? "duplicate" : "saved");
+    try {
+      const response = await submitWaitlist(email);
+      setResult(response.duplicate ? "duplicate" : "saved");
+    } catch {
+      setResult(null);
+    }
   };
 
   if (result) {
@@ -46,6 +50,7 @@ export function WaitlistForm() {
         <input
           id="waitlist-email"
           type="email"
+          autoComplete="email"
           placeholder="you@example.com"
           aria-invalid={Boolean(errors.email)}
           aria-describedby={errors.email ? "waitlist-error" : undefined}
@@ -57,9 +62,10 @@ export function WaitlistForm() {
           </p>
         ) : null}
       </div>
-      <button className="button" type="submit" disabled={isSubmitting}>
-        {isSubmitting ? "Joining…" : "Join early access"}
-        {!isSubmitting ? <ArrowRight size={17} /> : null}
+      <button className="button" type="submit" disabled={isSubmitting} aria-busy={isSubmitting}>
+        {isSubmitting ? <LoaderCircle className="spin" size={17} aria-hidden /> : null}
+        {isSubmitting ? "Joining" : "Join early access"}
+        {!isSubmitting ? <ArrowRight size={17} aria-hidden /> : null}
       </button>
     </form>
   );
