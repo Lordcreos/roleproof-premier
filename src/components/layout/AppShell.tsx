@@ -35,7 +35,11 @@ export function AppShell({ children }: { children: ReactNode }) {
             <span className="brand-mark">R</span>
             <span>RoleProof</span>
           </Link>
-          <nav className={cn("nav-links", menuOpen && "is-open")} aria-label="Primary">
+          <nav
+            id="primary-navigation"
+            className={cn("nav-links", menuOpen && "is-open")}
+            aria-label="Primary"
+          >
             {navItems.map((item) => (
               <Link
                 key={item.to}

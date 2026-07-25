@@ -444,6 +444,19 @@ main:focus {
   white-space: nowrap;
 }
 
+@media (max-width: 680px) {
+  .ticker {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 14px;
+    padding: 14px 20px;
+    white-space: normal;
+    font-size: 0.92rem;
+  }
+
+  .ticker > span[aria-hidden] { display: none; }
+}
+
 .section-heading {
   max-width: 720px;
   margin-bottom: 55px;
