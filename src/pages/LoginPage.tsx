@@ -70,8 +70,8 @@ export function LoginPage() {
           <h1>{isSignup ? "Start with the proof you already have." : "Sign in to RoleProof."}</h1>
           <p className="auth-lede">
             {isSignup
-              ? "Two fields and you&rsquo;re in. Demo accounts live in your browser—no email is sent."
-              : "Use any email you&rsquo;ve signed up with. Demo mode—no password is checked."}
+              ? "Two fields and you’re in. Demo accounts live in your browser—no email is sent."
+              : "Use any email you’ve signed up with. Demo mode—no password is checked."}
           </p>
 
           <div className="auth-tabs" role="tablist">

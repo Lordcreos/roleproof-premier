@@ -5,8 +5,8 @@ import { useAuth, type AuthAccount } from "../lib/auth";
 import { Eyebrow } from "../components/ui/Primitives";
 
 const goals: Array<{ id: NonNullable<AuthAccount["goal"]>; label: string; text: string }> = [
-  { id: "new-role", label: "Land a new role", text: "I&rsquo;m applying and want stronger, evidence-first applications." },
-  { id: "career-change", label: "Change direction", text: "I&rsquo;m re-framing my experience for a different kind of role." },
+  { id: "new-role", label: "Land a new role", text: "I’m applying and want stronger, evidence-first applications." },
+  { id: "career-change", label: "Change direction", text: "I’m re-framing my experience for a different kind of role." },
   { id: "coach-clients", label: "Coach candidates", text: "I help others prepare and want a shared, honest workspace." },
   { id: "explore", label: "Just exploring", text: "Curious what an evidence-first application looks like." },
 ];
@@ -70,7 +70,7 @@ export function OnboardingPage() {
                     onClick={() => setGoal(option.id)}
                   >
                     <strong>{option.label}</strong>
-                    <span dangerouslySetInnerHTML={{ __html: option.text }} />
+                    <span>{option.text}</span>
                     {selected ? <Check size={16} className="goal-check" /> : null}
                   </button>
                 );
