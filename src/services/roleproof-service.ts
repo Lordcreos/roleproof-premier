@@ -8,6 +8,7 @@ import {
   saveLetterLocally,
   saveReportLocally,
 } from "../lib/storage";
+import { upsertApplicationFromReport } from "../lib/applications";
 import { roleProofReportSchema } from "../schemas/domain";
 import type {
   CoverLetterDocument,
@@ -26,6 +27,7 @@ export async function analyzeRole(input: JobAnalysisInput) {
   if (isDemoMode || !supabase) {
     const report = await buildDemoReport(input);
     saveReportLocally(report);
+    upsertApplicationFromReport(report);
     return report;
   }
 
@@ -38,6 +40,7 @@ export async function analyzeRole(input: JobAnalysisInput) {
     accessToken: data.accessToken,
   });
   saveReportLocally(report);
+  upsertApplicationFromReport(report);
   return report;
 }
 

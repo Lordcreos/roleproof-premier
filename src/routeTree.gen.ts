@@ -9,13 +9,30 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as LeonardoSanchezRouteImport } from './routes/leonardo-sanchez'
 import { Route as LabRouteImport } from './routes/lab'
+import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as RSlugRouteImport } from './routes/r.$slug'
+import { Route as AppSettingsRouteImport } from './routes/app.settings'
+import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
+import { Route as AppApplicationsRouteImport } from './routes/app.applications'
 import { Route as ReportsIdIndexRouteImport } from './routes/reports.$id.index'
 import { Route as ReportsIdCoverLetterRouteImport } from './routes/reports.$id.cover-letter'
 
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LeonardoSanchezRoute = LeonardoSanchezRouteImport.update({
   id: '/leonardo-sanchez',
   path: '/leonardo-sanchez',
@@ -26,15 +43,40 @@ const LabRoute = LabRouteImport.update({
   path: '/lab',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
 const RSlugRoute = RSlugRouteImport.update({
   id: '/r/$slug',
   path: '/r/$slug',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppApplicationsRoute = AppApplicationsRouteImport.update({
+  id: '/applications',
+  path: '/applications',
+  getParentRoute: () => AppRoute,
 } as any)
 const ReportsIdIndexRoute = ReportsIdIndexRouteImport.update({
   id: '/reports/$id/',
@@ -49,9 +91,16 @@ const ReportsIdCoverLetterRoute = ReportsIdCoverLetterRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
   '/lab': typeof LabRoute
   '/leonardo-sanchez': typeof LeonardoSanchezRoute
+  '/login': typeof LoginRoute
+  '/onboarding': typeof OnboardingRoute
+  '/app/applications': typeof AppApplicationsRoute
+  '/app/dashboard': typeof AppDashboardRoute
+  '/app/settings': typeof AppSettingsRoute
   '/r/$slug': typeof RSlugRoute
+  '/app/': typeof AppIndexRoute
   '/reports/$id/cover-letter': typeof ReportsIdCoverLetterRoute
   '/reports/$id/': typeof ReportsIdIndexRoute
 }
@@ -59,16 +108,29 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/lab': typeof LabRoute
   '/leonardo-sanchez': typeof LeonardoSanchezRoute
+  '/login': typeof LoginRoute
+  '/onboarding': typeof OnboardingRoute
+  '/app/applications': typeof AppApplicationsRoute
+  '/app/dashboard': typeof AppDashboardRoute
+  '/app/settings': typeof AppSettingsRoute
   '/r/$slug': typeof RSlugRoute
+  '/app': typeof AppIndexRoute
   '/reports/$id/cover-letter': typeof ReportsIdCoverLetterRoute
   '/reports/$id': typeof ReportsIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
   '/lab': typeof LabRoute
   '/leonardo-sanchez': typeof LeonardoSanchezRoute
+  '/login': typeof LoginRoute
+  '/onboarding': typeof OnboardingRoute
+  '/app/applications': typeof AppApplicationsRoute
+  '/app/dashboard': typeof AppDashboardRoute
+  '/app/settings': typeof AppSettingsRoute
   '/r/$slug': typeof RSlugRoute
+  '/app/': typeof AppIndexRoute
   '/reports/$id/cover-letter': typeof ReportsIdCoverLetterRoute
   '/reports/$id/': typeof ReportsIdIndexRoute
 }
@@ -76,9 +138,16 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/app'
     | '/lab'
     | '/leonardo-sanchez'
+    | '/login'
+    | '/onboarding'
+    | '/app/applications'
+    | '/app/dashboard'
+    | '/app/settings'
     | '/r/$slug'
+    | '/app/'
     | '/reports/$id/cover-letter'
     | '/reports/$id/'
   fileRoutesByTo: FileRoutesByTo
@@ -86,23 +155,39 @@ export interface FileRouteTypes {
     | '/'
     | '/lab'
     | '/leonardo-sanchez'
+    | '/login'
+    | '/onboarding'
+    | '/app/applications'
+    | '/app/dashboard'
+    | '/app/settings'
     | '/r/$slug'
+    | '/app'
     | '/reports/$id/cover-letter'
     | '/reports/$id'
   id:
     | '__root__'
     | '/'
+    | '/app'
     | '/lab'
     | '/leonardo-sanchez'
+    | '/login'
+    | '/onboarding'
+    | '/app/applications'
+    | '/app/dashboard'
+    | '/app/settings'
     | '/r/$slug'
+    | '/app/'
     | '/reports/$id/cover-letter'
     | '/reports/$id/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
   LabRoute: typeof LabRoute
   LeonardoSanchezRoute: typeof LeonardoSanchezRoute
+  LoginRoute: typeof LoginRoute
+  OnboardingRoute: typeof OnboardingRoute
   RSlugRoute: typeof RSlugRoute
   ReportsIdCoverLetterRoute: typeof ReportsIdCoverLetterRoute
   ReportsIdIndexRoute: typeof ReportsIdIndexRoute
@@ -110,6 +195,20 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/leonardo-sanchez': {
       id: '/leonardo-sanchez'
       path: '/leonardo-sanchez'
@@ -124,6 +223,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LabRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -131,12 +237,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/r/$slug': {
       id: '/r/$slug'
       path: '/r/$slug'
       fullPath: '/r/$slug'
       preLoaderRoute: typeof RSlugRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/app/settings': {
+      id: '/app/settings'
+      path: '/settings'
+      fullPath: '/app/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/dashboard': {
+      id: '/app/dashboard'
+      path: '/dashboard'
+      fullPath: '/app/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/applications': {
+      id: '/app/applications'
+      path: '/applications'
+      fullPath: '/app/applications'
+      preLoaderRoute: typeof AppApplicationsRouteImport
+      parentRoute: typeof AppRoute
     }
     '/reports/$id/': {
       id: '/reports/$id/'
@@ -155,10 +289,29 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AppRouteChildren {
+  AppApplicationsRoute: typeof AppApplicationsRoute
+  AppDashboardRoute: typeof AppDashboardRoute
+  AppSettingsRoute: typeof AppSettingsRoute
+  AppIndexRoute: typeof AppIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppApplicationsRoute: AppApplicationsRoute,
+  AppDashboardRoute: AppDashboardRoute,
+  AppSettingsRoute: AppSettingsRoute,
+  AppIndexRoute: AppIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
   LabRoute: LabRoute,
   LeonardoSanchezRoute: LeonardoSanchezRoute,
+  LoginRoute: LoginRoute,
+  OnboardingRoute: OnboardingRoute,
   RSlugRoute: RSlugRoute,
   ReportsIdCoverLetterRoute: ReportsIdCoverLetterRoute,
   ReportsIdIndexRoute: ReportsIdIndexRoute,

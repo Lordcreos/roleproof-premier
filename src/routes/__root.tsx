@@ -12,6 +12,8 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AppShell } from "../components/layout/AppShell";
+import { ProductShell } from "../components/layout/ProductShell";
+import { AuthProvider } from "../lib/auth";
 import { NotFoundPage } from "../pages/NotFoundPage";
 import { ErrorPanel } from "../components/ui/Primitives";
 
@@ -85,13 +87,23 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  // Public RoleProof pages render without the app chrome so the report
-  // itself is the primary surface.
-  const isBareRoute = pathname.startsWith("/r/");
+  // Public share pages, the login/onboarding flow and the authenticated
+  // /app/* product surface each render their own chrome.
+  const isPublicShare = pathname.startsWith("/r/");
+  const isAuthFlow = pathname === "/login" || pathname === "/onboarding";
+  const isProduct = pathname === "/app" || pathname.startsWith("/app/");
 
   return (
     <QueryClientProvider client={queryClient}>
-      {isBareRoute ? <Outlet /> : <AppShell><Outlet /></AppShell>}
+      <AuthProvider>
+        {isPublicShare || isAuthFlow ? (
+          <Outlet />
+        ) : isProduct ? (
+          <ProductShell><Outlet /></ProductShell>
+        ) : (
+          <AppShell><Outlet /></AppShell>
+        )}
+      </AuthProvider>
     </QueryClientProvider>
   );
 }
